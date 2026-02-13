@@ -11,6 +11,7 @@ import { fetchNftStats } from "../utils/metaplex";
 import { txHistory } from "../utils/transactionHistory";
 import { TransactionHistoryPanel } from "./TransactionHistoryPanel";
 import { DiagnosticPanel } from "./DiagnosticPanel";
+import { ProceduralVisualizer } from "./ProceduralVisualizer";
 
 // --- Step 7.5: Enforce PSG1 Style ---
 // Mobile-first (w-full max-w-md), Portrait layout, Large Buttons (p-4 text-xl)
@@ -24,6 +25,7 @@ export default function GameInterface() {
     const [logs, setLogs] = useState<string[]>([]);
     const [loading, setLoading] = useState<string | null>(null);
     const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
+    const [showVisuals, setShowVisuals] = useState<boolean>(false);
 
     // --- Step 8.5: Metadata Explanation ---
     // We fetch metadata from the connected wallet's NFT (mocked mint for demo)
@@ -311,7 +313,25 @@ export default function GameInterface() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white font-mono p-4">
-            <h1 className="text-2xl mb-4 text-green-400 border-b border-green-400 w-full max-w-md text-center pb-2">PROOF OF PLAY DUNGEON</h1>
+            <h1 className="text-2xl mb-4 text-green-400 border-b border-green-400 w-full max-w-md text-center pb-2 flex justify-between items-center px-2">
+                <span>PROOF OF PLAY</span>
+                <button
+                    onClick={() => setShowVisuals(!showVisuals)}
+                    className={`text-[10px] px-2 py-1 rounded border ${showVisuals ? 'bg-green-900 border-green-500 text-green-300' : 'bg-gray-900 border-gray-600 text-gray-500'}`}
+                >
+                    {showVisuals ? '👁️ VISUAL' : '📟 TEXT'}
+                </button>
+            </h1>
+
+            {/* Step 7.5: Procedural Graphics Layer */}
+            {showVisuals && (
+                <div className="w-full max-w-md mb-4">
+                    <ProceduralVisualizer
+                        hash={gameState?.lastEvent || Array(32).fill(0)}
+                        isFighting={loading === "fight"}
+                    />
+                </div>
+            )}
 
             {/* Wallet Connect Button */}
             <div className="w-full max-w-md mb-4">
