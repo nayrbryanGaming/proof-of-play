@@ -19,9 +19,10 @@ We are submitting to the following tracks based on our **Protocol-First** archit
 - **Invisible DeFi Layer:** We don't just "add a swap button." Our protocol *embeds* Jupiter V6 swaps directly into the game loop as the reward mechanism.
 - **Play-to-Swap:** Validates a new model where gameplay outcomes trigger immediate, programmed DeFi actions without user context-switching.
 
-### 3. On-chain Assets & Programmable Gaming Infrastructure by Metaplex 💎
-**Protocol Fit:**
-- **Functional Metadata Standard:** We demonstrate a standard for using Metaplex NFT metadata as *executable game logic* (e.g., ATK stats) rather than just passive display assets.
+### 3. On-chain Assets & Programmable Gaming Infrastructure (Metaplex)
+- **Asset-less Graphics:** Minimalist procedural rendering.
+- **Procedural Infrastructure:** Includes a 100% code-generated 4K Canvas visualizer that renders uniquely based on the on-chain `last_event` hash. No assets, no images, just programmable mathematics.
+- **NFT-Driven Logic:** Equipment stats in metadata are functional, not just cosmetic. We demonstrate a standard for using Metaplex NFT metadata as *executable game logic* (e.g., ATK stats) rather than just passive display assets.
 - **State-Driven Assets:** The protocol validates asset ownership and attributes on-chain before allowing gameplay actions.
 
 ---
