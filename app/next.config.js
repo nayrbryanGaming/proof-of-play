@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: 'export',
     reactStrictMode: true,
     env: {
         NEXT_PUBLIC_RPC_ENDPOINT: process.env.NEXT_PUBLIC_RPC_ENDPOINT,
@@ -7,7 +8,8 @@ const nextConfig = {
         NEXT_PUBLIC_EQUIP_MINT: process.env.NEXT_PUBLIC_EQUIP_MINT,
     },
     images: {
-        domains: ['arweave.net', 'shdw-drive.genesysgo.net'], // Common NFT storage
+        unoptimized: true,
+        domains: ['arweave.net', 'shdw-drive.genesysgo.net'],
     },
 };
 
