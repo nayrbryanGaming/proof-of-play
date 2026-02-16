@@ -1,2 +1,0 @@
-A protocol-first proof that games can run entirely on-chain.
-No backend. No database. Every action is a Solana transaction. Built PSG1-first.
