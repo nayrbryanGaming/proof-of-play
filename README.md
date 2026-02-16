@@ -74,7 +74,7 @@ If the frontend disappears, the system still exists.
 
 ---
 
-## SYSTEM ARCHITECTURE (SINGLE SOURCE of TRUTH)
+## SYSTEM ARCHITECTURE (SINGLE SOURCE OF TRUTH)
 
 **Anchor Program**
 - Executes all gameplay logic
