@@ -4,7 +4,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 export interface TransactionRecord {
     signature: string;
     timestamp: number;
-    action: 'init' | 'explore' | 'fight' | 'claim';
+    action: 'init' | 'explore' | 'fight' | 'claim' | 'equip';
     status: 'success' | 'pending' | 'failed';
     explorerUrl: string;
 }
@@ -92,6 +92,7 @@ export class TransactionHistory {
             explore: this.history.filter(r => r.action === 'explore').length,
             fight: this.history.filter(r => r.action === 'fight').length,
             claim: this.history.filter(r => r.action === 'claim').length,
+            equip: this.history.filter(r => r.action === 'equip').length,
         };
     }
 }

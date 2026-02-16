@@ -11,7 +11,7 @@ proof_of_play = "3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "mainnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

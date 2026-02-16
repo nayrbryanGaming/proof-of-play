@@ -70,6 +70,31 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "equip",
+      "accounts": [
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "atkBonus",
+          "type": "u8"
+        },
+        {
+          "name": "defBonus",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -106,6 +131,10 @@
           {
             "name": "canClaim",
             "type": "bool"
+          },
+          {
+            "name": "level",
+            "type": "u32"
           }
         ]
       }
