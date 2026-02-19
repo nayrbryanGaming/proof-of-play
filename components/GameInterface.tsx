@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet, useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton, WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
 import { Program, AnchorProvider, web3, BN } from "@coral-xyz/anchor";
 import { useState, useEffect } from "react";
 import idl from "./idl.json"; // You will need to copy your IDL here after build
@@ -26,7 +26,7 @@ interface PlayerAccount {
 }
 
 export default function GameInterface() {
-    const { publicKey: waPublicKey, wallet } = useWallet();
+    const { publicKey: waPublicKey, wallet, connected } = useWallet();
     const anchorWallet = useAnchorWallet();
     const { connection } = useConnection();
     const [program, setProgram] = useState<Program | null>(null);
@@ -100,7 +100,11 @@ export default function GameInterface() {
     };
 
     const addLog = (msg: string) => {
-        setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
+        let finalMsg = msg;
+        if (msg.toLowerCase().includes("network mismatch") || msg.toLowerCase().includes("blockhash")) {
+            finalMsg = "⚠️ WRONG NETWORK! Please switch your wallet to DEVNET.";
+        }
+        setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${finalMsg}`]);
     };
 
     // --- Step 3.5: PDA Derivation Implementation ---
@@ -406,9 +410,12 @@ export default function GameInterface() {
                 </div>
             )}
 
-            {/* Wallet Connect Button */}
-            <div className="w-full max-w-md mb-6 relative z-10">
+            {/* Wallet Connect/Disconnect Group */}
+            <div className="w-full max-w-md mb-6 relative z-10 flex flex-col gap-2">
                 <WalletMultiButton className="!bg-[#00ff41] !text-black !font-bold !w-full !py-3 !text-lg !rounded-none !uppercase !tracking-widest hover:!scale-105 transition-transform !border-2 !border-[#00ff41]" />
+                {connected && (
+                    <WalletDisconnectButton className="!bg-red-900/20 !text-red-500 !font-bold !w-full !py-2 !text-sm !rounded-none !uppercase !tracking-widest hover:!bg-red-900/50 transition-colors !border !border-red-500 justify-center" />
+                )}
             </div>
 
             {/* Status Panel */}
