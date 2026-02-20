@@ -15,7 +15,7 @@
 5. Environment Variables:
    ```
    NEXT_PUBLIC_RPC_ENDPOINT=https://api.devnet.solana.com
-   NEXT_PUBLIC_PROGRAM_ID=3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK
+   NEXT_PUBLIC_PROGRAM_ID=3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ
    ```
 6. Click "Deploy" → Wait 2-3 minutes
 
@@ -76,7 +76,7 @@
 
 ## 📊 System Status
 
-**Program:** ✅ Deployed to `3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK`  
+**Program:** ✅ Deployed to `3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ`  
 **Frontend:** ✅ Built and ready to deploy  
 **GitHub:** ✅ https://github.com/nayrbryangaming/proof-of-play  
 **Vercel:** ⏳ Awaiting your deployment
@@ -108,9 +108,9 @@
 - Try different RPC: `https://rpc.ankr.com/solana_devnet`
 
 **Program Not Found:**
-- Verify Program ID: `3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK`
+- Verify Program ID: `3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ`
 - Check network: Must be Devnet
-- Try: `solana program show 3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK --url devnet`
+- Try: `solana program show 3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ --url devnet`
 
 ---
 

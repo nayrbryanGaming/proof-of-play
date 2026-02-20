@@ -18,7 +18,7 @@ Repository: https://github.com/[your-username]/proof_of_play
 4. Add Environment Variables:
    ```
    NEXT_PUBLIC_RPC_ENDPOINT=https://api.devnet.solana.com
-   NEXT_PUBLIC_PROGRAM_ID=3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK
+   NEXT_PUBLIC_PROGRAM_ID=3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ
    NEXT_PUBLIC_EQUIP_MINT=MINT_ADDRESS_HERE
    ```
 5. Click "Deploy"
@@ -133,7 +133,7 @@ Before presenting to stakeholders:
 
 ## 📊 PROGRAM INFORMATION
 
-**Program ID:** `3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK`  
+**Program ID:** `3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ`  
 **Network:** Solana Devnet  
 **Framework:** Anchor 0.32.1  
 **Language:** Rust  
@@ -223,7 +223,7 @@ If deployment fails:
 For program issues:
 ```bash
 # Verify program exists
-solana program show 3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK --url devnet
+solana program show 3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ --url devnet
 
 # Check account
 solana account [PDA_ADDRESS] --url devnet
