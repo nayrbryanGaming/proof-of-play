@@ -35,6 +35,7 @@ export default function GameInterface() {
     const [loading, setLoading] = useState<string | null>(null);
     const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
     const [showVisuals, setShowVisuals] = useState<boolean>(false);
+    const [isSimulationMode, setIsSimulationMode] = useState<boolean>(false); // New Flag
 
     // --- Step 8.5: Metadata Explanation ---
     // We fetch metadata from the connected wallet's NFT (mocked mint for demo)
@@ -107,7 +108,10 @@ export default function GameInterface() {
         if (msg.toLowerCase().includes("0x1") || msg.includes("attempt to debit an account but found no record")) {
             finalMsg = "⚠️ INSUFFICIENT SOL! You need Devnet SOL to play.";
         }
-        setLogs((prev) => [...prev, `[${new Date().toLocaleTimeString()}] ${finalMsg}`]);
+        setLogs((prev) => {
+            const newLogs = [...prev, `[${new Date().toLocaleTimeString()}] ${finalMsg}`];
+            return newLogs.slice(-50); // CAP LOGS at 50 to prevent memory leak
+        });
     };
 
     // --- Step 3.2: Balance Check & Airdrop ---
@@ -159,9 +163,11 @@ export default function GameInterface() {
         return pda;
     };
 
+    // ... (lines 113-160 remain unchanged)
+
     // --- REAL-TIME: Subscribe to Account Changes ---
     useEffect(() => {
-        if (!program || !anchorWallet || !connection) return;
+        if (!program || !anchorWallet || !connection || isSimulationMode) return; // Stop polling if in Sim Mode
 
         let subscriptionId: number;
 
@@ -179,7 +185,6 @@ export default function GameInterface() {
                 pda,
                 async (accountInfo) => {
                     try {
-                        // Decode new state directly from the buffer
                         const decoded = program.coder.accounts.decode("player", accountInfo.data);
                         setGameState(decoded as unknown as PlayerAccount);
                         setLastRefresh(Date.now());
@@ -190,26 +195,20 @@ export default function GameInterface() {
                 },
                 "confirmed"
             );
-
             addLog("🟢 Real-time connection established.");
         };
 
         subscribeToPlayer();
 
-        // FAILSAFE: Polling Backup (Every 3s)
-        // Ensures state is sync'd even if WebSocket packet is dropped by RPC
+        // FAILSAFE: Polling Backup (Every 5s - Reduced frequency)
         const intervalId = setInterval(async () => {
+            if (isSimulationMode) return; // Double check
             const pda = await getPlayerPDA();
             if (pda) {
                 const account = await fetchPlayerAccount(pda);
                 if (account) {
-                    // Check if state actually changed to avoid re-renders? 
-                    // React state setter handles strict equality checks usually, but let's just set it.
-                    // We don't want to spam logs, so we won't log on poll unless it changes significantly,
-                    // but for this 'Super Perfect' strict mode, reliable data > log spam.
                     setGameState(prev => {
                         if (JSON.stringify(prev) !== JSON.stringify(account)) {
-                            // Only update if different
                             return account;
                         }
                         return prev;
@@ -217,7 +216,7 @@ export default function GameInterface() {
                     setLastRefresh(Date.now());
                 }
             }
-        }, 3000);
+        }, 5000); // 5s polling
 
         return () => {
             if (subscriptionId) {
@@ -225,15 +224,35 @@ export default function GameInterface() {
             }
             clearInterval(intervalId);
         };
-    }, [program, anchorWallet, connection]);
+    }, [program, anchorWallet, connection, isSimulationMode]); // Add isSimulationDependency
 
     // --- SIMULATION HELPERS ---
     const simulateDelay = () => new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     const generateMockTx = () => "5" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + "111";
 
     const initPlayer = async () => {
+        if (loading) return; // Prevent double click
         setLoading("init");
         try {
+            if (isSimulationMode) {
+                // Already in sim mode, just re-init local state
+                setTimeout(() => {
+                    const mockState: PlayerAccount = {
+                        authority: anchorWallet!.publicKey,
+                        hp: 100,
+                        atk: 10,
+                        def: 5,
+                        lastEvent: Array(32).fill(0),
+                        canClaim: false,
+                        level: 1
+                    };
+                    setGameState(mockState);
+                    addLog("✅ [DEMO] Hero Re-Initialized (Simulation)");
+                    setLoading(null);
+                }, 1000);
+                return;
+            }
+
             if (!program || !anchorWallet) throw new Error("Wallet not connected");
 
             const pid = program.programId.toString();
@@ -243,7 +262,6 @@ export default function GameInterface() {
             const pda = await getPlayerPDA();
             if (!pda) throw new Error("PDA calculation failed");
 
-            // Check if Program is executable (Mock check via simple RPC call or just Try/Catch)
             const tx = await program.methods
                 .initPlayer()
                 .accounts({
@@ -268,6 +286,7 @@ export default function GameInterface() {
             if (e.message.includes("Program that does not exist") || e.message.includes("simulation failed")) {
                 addLog("⚠️ CONTRACT NOT DEPLOYED? Switching to DEMO MODE.");
                 addLog("🕹️ Simulating On-Chain Logic locally...");
+                setIsSimulationMode(true); // ENABLE SIMULATION MODE GLOBALLY
                 setTimeout(() => {
                     const mockState: PlayerAccount = {
                         authority: anchorWallet!.publicKey,
@@ -369,6 +388,10 @@ export default function GameInterface() {
 
     const explore = async () => {
         setLoading("explore");
+        if (isSimulationMode) {
+            runSimulation('explore');
+            return;
+        }
         try {
             if (!program || !anchorWallet || !gameState) throw new Error("State missing");
             addLog(`🗺️ Hashing On-Chain Entropy (Level ${gameState.level})...`);
@@ -402,6 +425,10 @@ export default function GameInterface() {
 
     const fight = async () => {
         setLoading("fight");
+        if (isSimulationMode) {
+            runSimulation('fight');
+            return;
+        }
         try {
             if (!program || !anchorWallet || !gameState) throw new Error("State missing");
             if (gameState.lastEvent.every(b => b === 0)) throw new Error("Explore first");
@@ -440,6 +467,10 @@ export default function GameInterface() {
 
     const claim = async () => {
         setLoading("claim");
+        if (isSimulationMode) {
+            runSimulation('claim');
+            return;
+        }
         try {
             if (!program || !anchorWallet || !gameState?.canClaim) throw new Error("Nothing to claim");
             addLog(`🎁 Initiating On-Chain Reward Settlement...`);
