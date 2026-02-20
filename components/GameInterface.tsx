@@ -373,6 +373,7 @@ export default function GameInterface() {
             if (!program || !anchorWallet || !gameState) throw new Error("State missing");
             addLog(`🗺️ Hashing On-Chain Entropy (Level ${gameState.level})...`);
             const pda = await getPlayerPDA();
+            if (!pda) throw new Error("PDA");
 
             const tx = await program.methods.explore()
                 .accounts({ player: pda, authority: anchorWallet.publicKey })
@@ -386,7 +387,8 @@ export default function GameInterface() {
             const account = await fetchPlayerAccount(pda!);
             setGameState(account);
         } catch (e: any) {
-            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist")) {
+            console.error("Explore Error:", e);
+            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist") || e.message.includes("User rejected")) {
                 addLog("⚠️ NETWORK ERROR: Switching to Simulation...");
                 runSimulation('explore');
             } else {
@@ -394,7 +396,7 @@ export default function GameInterface() {
                 setLoading(null);
             }
         } finally {
-            if (!loading) setLoading(null); // Safety check, runSimulation clears it too
+            if (!loading) setLoading(null);
         }
     };
 
@@ -406,6 +408,7 @@ export default function GameInterface() {
 
             addLog(`⚔️ Executing Deterministic Combat Logic...`);
             const pda = await getPlayerPDA();
+            if (!pda) throw new Error("PDA");
 
             const tx = await program.methods.fight()
                 .accounts({ player: pda, authority: anchorWallet.publicKey })
@@ -424,7 +427,8 @@ export default function GameInterface() {
                 addLog(`💀 DEFEATED. Zero database records affected. State is Truth.`);
             }
         } catch (e: any) {
-            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist")) {
+            console.error("Fight Error:", e);
+            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist") || e.message.includes("User rejected")) {
                 addLog("⚠️ NETWORK ERROR: Switching to Simulation...");
                 runSimulation('fight');
             } else {
@@ -440,6 +444,7 @@ export default function GameInterface() {
             if (!program || !anchorWallet || !gameState?.canClaim) throw new Error("Nothing to claim");
             addLog(`🎁 Initiating On-Chain Reward Settlement...`);
             const pda = await getPlayerPDA();
+            if (!pda) throw new Error("PDA");
 
             const tx = await program.methods.claim()
                 .accounts({ player: pda, authority: anchorWallet.publicKey })
@@ -453,7 +458,8 @@ export default function GameInterface() {
             const account = await fetchPlayerAccount(pda!);
             setGameState(account);
         } catch (e: any) {
-            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist")) {
+            console.error("Claim Error:", e);
+            if (e.message.includes("simulation failed") || e.message.includes("Program that does not exist") || e.message.includes("User rejected")) {
                 addLog("⚠️ NETWORK ERROR: Switching to Simulation...");
                 runSimulation('claim');
             } else {
