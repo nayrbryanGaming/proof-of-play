@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-proof_of_play = "3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK"
+proof_of_play = "3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ"
 
 [registry]
 url = "https://api.apr.dev"

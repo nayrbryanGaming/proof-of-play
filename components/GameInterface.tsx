@@ -45,7 +45,7 @@ export default function GameInterface() {
     useEffect(() => {
         if (!anchorWallet) return;
         const provider = new AnchorProvider(connection, anchorWallet, AnchorProvider.defaultOptions());
-        const programId = new web3.PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID ?? "3QFQBFSLCAqenWMdTaj9HBHVCjJwzD19Wz9ELvSd5fmK");
+        const programId = new web3.PublicKey(process.env.NEXT_PUBLIC_PROGRAM_ID ?? "3q31CJ8wMEDVjtfgZXnyEskzZ17yCmTj2p7MKkSKqiEJ");
         // @ts-ignore - IDL type mismatch is common in Anchor 0.29+
         const prog = new Program(idl, programId, provider);
         setProgram(prog);
